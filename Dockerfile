@@ -1,4 +1,4 @@
-ARG DOCKER_OPENSTUDIO_VERSION=2.8.1
+ARG DOCKER_OPENSTUDIO_VERSION=3.0.0-beta
 FROM canmet/docker-openstudio:$DOCKER_OPENSTUDIO_VERSION
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
@@ -7,10 +7,10 @@ ARG DISPLAY=local
 ENV DISPLAY ${DISPLAY}
 
 #Repository utilities add on list.
-ARG repository_utilities='ca-certificates software-properties-common python-software-properties dpkg-dev debconf-utils software-properties-common python-software-properties'
+ARG repository_utilities='ca-certificates software-properties-common dpkg-dev debconf-utils'
 
 #Basic software
-ARG software='git vim curl zip lynx xemacs21 nano unzip xterm terminator midori diffuse silversearcher-ag openssh-client openssh-server sqlitebrowser'
+ARG software='git vim curl zip lynx xemacs21 nano unzip xterm terminator diffuse silversearcher-ag openssh-client openssh-server sqlitebrowser dbus-x11 python3 python3-pip code'
 
 #Netbeans Dependancies (requires $java_repositories to be set)
 ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev oracle-java8-set-default'
@@ -41,7 +41,9 @@ RUN mkdir /downloads
 #Install software packages
 RUN apt-get update && \ 
 	$apt_install $repository_utilities \
-	&& sudo add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
+	&& add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
+	&& wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - \
+	&& add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" \
 	&& apt-get update && $apt_install $software $d3_deps $r_deps \ 
 	&& apt-get clean && $clean
 
@@ -58,27 +60,6 @@ RUN curl -fSL -o sqlite.tar.gz https://www.sqlite.org/2017/sqlite-autoconf-31602
     && make clean
 	
 	
-# MongoDB:
-# Import MongoDB public GPG key AND create a MongoDB list file
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 \
-&& apt-get install -y --no-install-recommends software-properties-common \
-&& echo "deb http://repo.mongodb.org/apt/ubuntu $(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d= -f2)/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list 	
-# Update apt-get sources AND install MongoDB
-RUN apt-get update && apt-get install -y mongodb-org	
-# Create the MongoDB data directory
-RUN mkdir -p /data/db	
-# Expose port 27017 from the container to the host
-EXPOSE 27017
-# Expose SSHD port just in case.
-EXPOSE 22
-
-
-#Update NodeJS and express
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
-&& apt-get install -y nodejs nodejs  build-essential \
-&& npm install -g express-generator nodemon bower
-EXPOSE 3000
-
 #install Amazon AWS CLI and packer
 RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip \
 && unzip packer_1.0.0_linux_amd64.zip -d /usr/bin/ \
@@ -90,29 +71,42 @@ RUN curl -O http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip \
 && rm ec2-api-tools.zip  
 ENV EC2_HOME=/usr/local/ec2/ec2-api-tools
 
+# Install aws cli2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+&& unzip awscliv2.zip \
+&& ./aws/install \
+&& rm awscliv2.zip
 
+# Install Chrome
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+&& apt-get update \
+&& $apt_install ./google-chrome-stable_current_amd64.deb \
+&& apt-get clean && $clean \
+&& rm google-chrome-stable_current_amd64.deb
 
 USER  osdev
 WORKDIR /home/osdev
 
 # Install RubyMine
-ARG ruby_mine_version='RubyMine-2018.2.6'
+ARG ruby_mine_version='RubyMine-2019.3.3'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 
 # Install PyCharm
-ARG pycharm_version='pycharm-professional-2019.1.3'
+ARG pycharm_version='pycharm-professional-2019.3.4'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
 #create symbolic link to rubymine and pycharm and set midori to default browser
 
-ARG pycharm_loc='pycharm-2019.1.3'
+ARG pycharm_loc='pycharm-2019.3.4'
 USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm \
 && ln -s /usr/bin/midori /bin/xdg-open
+
+
 
 
 USER  osdev
