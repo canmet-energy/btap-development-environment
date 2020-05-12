@@ -1,16 +1,20 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.0.0-beta
+ARG DOCKER_OPENSTUDIO_VERSION=3.0.0
+ARG OPENSTUDIO_APP_VERSION=1.0.0
+ARG OPENSTUDIO_APP_SHA=4f5416cfc7
+ARG OPENSTUDIO_APP_INSTALLER_URL=https://github.com/NREL/OpenStudioApplication/releases/download/v1.0.0/OpenStudioApplication-1.0.0.4f5416cfc7-Linux.deb
+
 FROM canmet/docker-openstudio:$DOCKER_OPENSTUDIO_VERSION
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
-ARG DISPLAY=local
+ARG DISPLAY=host.docker.internal
 ENV DISPLAY ${DISPLAY}
 
 #Repository utilities add on list.
 ARG repository_utilities='ca-certificates software-properties-common dpkg-dev debconf-utils'
 
 #Basic software
-ARG software='git vim curl zip lynx xemacs21 nano unzip xterm terminator diffuse silversearcher-ag openssh-client openssh-server sqlitebrowser dbus-x11 python3 python3-pip code'
+ARG software='git vim curl zip nano unzip xterm terminator diffuse openssh-client openssh-server sqlitebrowser dbus-x11 code'
 
 #Netbeans Dependancies (requires $java_repositories to be set)
 ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev oracle-java8-set-default'
@@ -27,7 +31,7 @@ ARG intial_purge_software='openjdk*'
 
 #set Java ENV
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-ENV PATH $JAVA_HOME/bin:$PATH
+ENV PATH $JAVA_HOME/bin:$PATHwget -O 
 
 #Ubuntu install commands
 ARG apt_install='apt-get install -y --no-install-recommends --force-yes'
@@ -38,51 +42,22 @@ ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
 #Create folder for downloads
 RUN mkdir /downloads
 
+# Install OpenStudio App
+RUN wget -O osa.deb $OPENSTUDIO_APP_INSTALLER_URL \
+&& apt-get update \
+&& $apt_install ./osa.deb  \
+&& apt-get clean && $clean \
+&& osa.deb 
+
 #Install software packages
 RUN apt-get update && \ 
-	$apt_install $repository_utilities \
-	&& add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
-	&& wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - \
-	&& add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" \
-	&& apt-get update && $apt_install $software $d3_deps $r_deps \ 
-	&& apt-get clean && $clean
+$apt_install $repository_utilities \
+&& add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
+&& wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - \
+&& add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" \
+&& apt-get update && $apt_install $software $d3_deps $r_deps \ 
+&& apt-get clean && $clean
 
-
-#### Build sqlite with json support
-RUN curl -fSL -o sqlite.tar.gz https://www.sqlite.org/2017/sqlite-autoconf-3160200.tar.gz \ 
-    && mkdir /usr/src/sqlite3 \
-    && tar -xzf sqlite.tar.gz -C /usr/src/sqlite3 \
-    && rm sqlite.tar.gz \
-    && cd /usr/src/sqlite3/sqlite-autoconf-3160200 \
-    && ./configure --prefix=/usr/local --enable-json1 --enable-readline \
-    && make  \ 
-    && make install \
-    && make clean
-	
-	
-#install Amazon AWS CLI and packer
-RUN wget https://releases.hashicorp.com/packer/1.0.0/packer_1.0.0_linux_amd64.zip \
-&& unzip packer_1.0.0_linux_amd64.zip -d /usr/bin/ \
-&& rm packer_1.0.0_linux_amd64.zip
-RUN curl -O http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip \
-&& mkdir /usr/local/ec2 \
-&& unzip ec2-api-tools.zip -d /usr/local/ec2 \
-&& mv  `find  /usr/local/ec2/ec2-api-tools-* -maxdepth 0` /usr/local/ec2/ec2-api-tools \
-&& rm ec2-api-tools.zip  
-ENV EC2_HOME=/usr/local/ec2/ec2-api-tools
-
-# Install aws cli2
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
-&& unzip awscliv2.zip \
-&& ./aws/install \
-&& rm awscliv2.zip
-
-# Install Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-&& apt-get update \
-&& $apt_install ./google-chrome-stable_current_amd64.deb \
-&& apt-get clean && $clean \
-&& rm google-chrome-stable_current_amd64.deb
 
 USER  osdev
 WORKDIR /home/osdev
@@ -105,8 +80,6 @@ USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm \
 && ln -s /usr/bin/midori /bin/xdg-open
-
-
 
 
 USER  osdev
