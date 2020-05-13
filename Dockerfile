@@ -1,9 +1,7 @@
 ARG DOCKER_OPENSTUDIO_VERSION=3.0.0
-ARG OPENSTUDIO_APP_VERSION=1.0.0
-ARG OPENSTUDIO_APP_SHA=4f5416cfc7
-ARG OPENSTUDIO_APP_INSTALLER_URL=https://github.com/NREL/OpenStudioApplication/releases/download/v1.0.0/OpenStudioApplication-1.0.0.4f5416cfc7-Linux.deb
 
-FROM canmet/docker-openstudio:$DOCKER_OPENSTUDIO_VERSION
+
+FROM canmet/docker-openstudio:3.0.0
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -30,8 +28,8 @@ ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essentia
 ARG intial_purge_software='openjdk*'
 
 #set Java ENV
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-ENV PATH $JAVA_HOME/bin:$PATHwget -O 
+#ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV PATH $JAVA_HOME/bin:$PATH
 
 #Ubuntu install commands
 ARG apt_install='apt-get install -y --no-install-recommends --force-yes'
@@ -43,11 +41,11 @@ ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
 RUN mkdir /downloads
 
 # Install OpenStudio App
-RUN wget -O osa.deb $OPENSTUDIO_APP_INSTALLER_URL \
+RUN wget -O osa.deb https://github.com/NREL/OpenStudioApplication/releases/download/v1.0.0/OpenStudioApplication-1.0.0.4f5416cfc7-Linux.deb \
 && apt-get update \
 && $apt_install ./osa.deb  \
 && apt-get clean && $clean \
-&& osa.deb 
+&& rm ./osa.deb 
 
 #Install software packages
 RUN apt-get update && \ 
