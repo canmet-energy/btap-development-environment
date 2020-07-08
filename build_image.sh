@@ -1,7 +1,7 @@
 #!/bin/bash
 source ./env.sh
 
-docker build --build-arg DISPLAY=$x_display:0.0 -t $image .
+docker build -t $image .
 if test -d //s-bcc-nas2/groups/Common\ Projects/HB/dockerhub_images/ ;
 then
     echo "Found Canmet folder."

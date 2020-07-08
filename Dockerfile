@@ -46,8 +46,15 @@ RUN wget -O osa.deb https://github.com/NREL/OpenStudioApplication/releases/downl
 && apt-get update \
 && $apt_install ./osa.deb  \
 && $apt_install ./pat.deb  \
+&& $apt_install libgconf-2-4 \
 && apt-get clean && $clean \
 && rm ./osa.deb ./pat.deb
+
+# Install Helm & eksctl
+RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash \
+&& curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
+&& mv /tmp/eksctl /usr/local/bin \
+&& rm /tmp/eksctl
 
 #Install software packages
 RUN apt-get update && \ 
@@ -63,19 +70,19 @@ USER  osdev
 WORKDIR /home/osdev
 
 # Install RubyMine
-ARG ruby_mine_version='RubyMine-2019.3.3'
+ARG ruby_mine_version='RubyMine-2020.1.2'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 
 # Install PyCharm
-ARG pycharm_version='pycharm-professional-2019.3.4'
+ARG pycharm_loc='pycharm-2020.1.2'
+ARG pycharm_version='pycharm-professional-2020.1.2'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
-#create symbolic link to rubymine and pycharm and set midori to default browser
 
-ARG pycharm_loc='pycharm-2019.3.4'
+#create symbolic link to rubymine and pycharm
 USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm \
@@ -83,6 +90,7 @@ RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymin
 
 
 USER  osdev
+echo 'alias OpenStudioApp=/usr/local/bin/OpenStudioApp' >> /etc/user_config_bashrc \
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
 ADD --chown=osdev:osdev config/terminator/config /home/osdev/.config/terminator/config
 ADD --chown=osdev:osdev config/.gitconfig /home/osdev/.gitconfig
