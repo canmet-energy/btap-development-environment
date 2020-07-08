@@ -41,7 +41,7 @@ ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
 RUN mkdir /downloads
 
 # Install OpenStudio App & PAT
-RUN wget -O osa.deb https://github.com/NREL/OpenStudioApplication/releases/download/v1.0.0/OpenStudioApplication-1.0.0.4f5416cfc7-Linux.deb \
+RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.0.1/OpenStudioApplication-1.0.1.3e8a20ade8-Linux.deb \
 && wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.0.1/ParametricAnalysisTool-3.0.1-Linux.deb \
 && apt-get update \
 && $apt_install ./osa.deb  \
