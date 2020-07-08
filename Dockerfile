@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.0.0
+ARG DOCKER_OPENSTUDIO_VERSION=3.0.1
 
 
-FROM canmet/docker-openstudio:3.0.0
+FROM canmet/docker-openstudio:3.0.1
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -40,12 +40,14 @@ ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
 #Create folder for downloads
 RUN mkdir /downloads
 
-# Install OpenStudio App
+# Install OpenStudio App & PAT
 RUN wget -O osa.deb https://github.com/NREL/OpenStudioApplication/releases/download/v1.0.0/OpenStudioApplication-1.0.0.4f5416cfc7-Linux.deb \
+&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.0.1/ParametricAnalysisTool-3.0.1-Linux.deb \
 && apt-get update \
 && $apt_install ./osa.deb  \
+&& $apt_install ./pat.deb  \
 && apt-get clean && $clean \
-&& rm ./osa.deb 
+&& rm ./osa.deb ./pat.deb
 
 #Install software packages
 RUN apt-get update && \ 
