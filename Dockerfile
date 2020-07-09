@@ -81,11 +81,13 @@ RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication
 && ln -s /usr/local/ParametricAnalysisTool-3.0.1/pat_3.0.1/opt/pat/pat /usr/local/sbin/pat \
 && apt-get clean && $clean
 
-# Install Helm & eksctl
+# Install Helm,  eksctl and kubectl
 RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash \
 && curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
-&& mv /tmp/eksctl /usr/local/bin
-
+&& mv /tmp/eksctl /usr/local/bin \
+&& curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl \
+&& chmod +x ./kubectl \
+&& sudo mv ./kubectl /usr/local/bin/kubectl
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
