@@ -4,10 +4,13 @@ $canmet_server_folder= "//s-bcc-nas2/Groups/Common\ Projects/HB/dockerhub_images
 $xfolder = ""
 if($xming -eq $null) {
 if (Test-Path "c:\Program Files\Xming" ) {
-   $xfolder = "c:\Program Files\Xming"
+   $xfolder = "c:\Program Files\Xming\Xming.exe"
 }
 if (Test-Path "c:\Program Files(x86)\Xming" ) {
-   $xfolder = 'c:\Program Files(x86)\Xming'
+   $xfolder = 'c:\Program Files(x86)\Xming\Xming.exe'
+}
+if (Test-Path "C:\Program Files\VcXsrv" ) {
+   $xfolder = 'C:\Program Files\VcXsrv\vcxsrv.exe'
 }
 
 }
@@ -16,7 +19,7 @@ $win_user = $env:UserName
 
 $xming = Get-Process xming -ErrorAction SilentlyContinue
 if($xming -eq $null) {
-    $xmingexe = $xfolder +  '\Xming.exe'
+    $xmingexe = $xfolder
 	$arguments = '-ac -multiwindow -clipboard  -dpi 108'
 	Write-Host $xmingexe $arguments
 	start-process $xmingexe $arguments
