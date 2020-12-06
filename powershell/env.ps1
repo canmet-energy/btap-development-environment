@@ -2,23 +2,28 @@ $os_version = &git rev-parse --abbrev-ref HEAD
 $image = "canmet/btap-development-environment:$($os_version)"
 $canmet_server_folder= "//s-bcc-nas2/Groups/Common\ Projects/HB/dockerhub_images/"
 $xfolder = ""
-if($xming -eq $null) {
+$x_process= ""
+
 if (Test-Path "c:\Program Files\Xming" ) {
    $xfolder = "c:\Program Files\Xming\Xming.exe"
+   $process = 'xming'
 }
 if (Test-Path "c:\Program Files(x86)\Xming" ) {
    $xfolder = 'c:\Program Files(x86)\Xming\Xming.exe'
+   $process = 'xming'
 }
 if (Test-Path "C:\Program Files\VcXsrv" ) {
+
    $xfolder = 'C:\Program Files\VcXsrv\vcxsrv.exe'
+   $process = 'vcxsrv'
 }
 
-}
 $host_ip = 'host.docker.internal'
 $win_user = $env:UserName
 
-$xming = Get-Process xming -ErrorAction SilentlyContinue
-if($xming -eq $null) {
+$is_x_server_running = Get-Process $process -ErrorAction SilentlyContinue  
+
+if($is_x_server_running -eq $null) {
     $xmingexe = $xfolder
 	$arguments = '-ac -multiwindow -clipboard  -dpi 108'
 	Write-Host $xmingexe $arguments
