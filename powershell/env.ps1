@@ -1,4 +1,4 @@
-$os_version = &git rev-parse --abbrev-ref HEAD 
+$os_version = 3.2 
 $image = "canmet/btap-development-environment:$($os_version)"
 $canmet_server_folder= "//s-bcc-nas2/Groups/Common\ Projects/HB/dockerhub_images/"
 $xfolder = ""

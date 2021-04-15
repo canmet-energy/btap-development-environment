@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.0.1
+ARG DOCKER_OPENSTUDIO_VERSION=3.2
 
 
-FROM canmet/docker-openstudio:3.0.1
+FROM canmet/docker-openstudio:3.2
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -52,13 +52,13 @@ RUN apt-get update \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2020.1.2'
+ARG ruby_mine_version='RubyMine-2021.1'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2020.1.2'
-ARG pycharm_version='pycharm-professional-2020.1.2'
+ARG pycharm_loc='pycharm-2021.1'
+ARG pycharm_version='pycharm-professional-2021.1'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
@@ -78,7 +78,7 @@ RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication
 && apt-get clean && $clean \
 && rm ./osa.deb ./pat.deb \
 && ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp \
-&& ln -s /usr/local/ParametricAnalysisTool-3.0.1/pat_3.0.1/opt/pat/pat /usr/local/sbin/pat \
+&& ln -s /usr/local/ParametricAnalysisTool-3.2/pat_3.2/opt/pat/pat /usr/local/sbin/pat \
 && apt-get clean && $clean
 
 # Install Helm,  eksctl and kubectl
