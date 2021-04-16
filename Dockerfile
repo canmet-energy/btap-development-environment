@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.2
+ARG DOCKER_OPENSTUDIO_VERSION=3.2a
 
 
-FROM canmet/docker-openstudio:3.2
+FROM canmet/docker-openstudio:3.2a
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
