@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.2a
+ARG DOCKER_OPENSTUDIO_VERSION=3.2.0test
 
 
-FROM canmet/docker-openstudio:3.2a
+FROM canmet/docker-openstudio:3.2.0test
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -58,7 +58,7 @@ RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
 ARG pycharm_loc='pycharm-2021.1'
-ARG pycharm_version='pycharm-professional-2021.1'
+ARG pycharm_version='pycharm-professional-2021.1.1'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
@@ -66,10 +66,12 @@ USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm 
 
+
+
 # Install OpenStudio App & PAT and create symbolic links.
 ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.0.1/OpenStudioApplication-1.0.1.3e8a20ade8-Linux.deb \
-&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.0.1/ParametricAnalysisTool-3.0.1-Linux.deb \
+RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.2.0-rc1/OpenStudioApplication-1.2.0-alpha+e47cbb1e9c-Linux.deb \
+&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.2.0/ParametricAnalysisTool-3.2.0-Linux.deb \
 && apt-get update \
 && $apt_install $os_app_deps \
 && pip install conan \
