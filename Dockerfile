@@ -79,8 +79,8 @@ RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication
 && $apt_install ./pat.deb  \
 && apt-get clean && $clean \
 && rm ./osa.deb ./pat.deb \
-&& ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp \
-&& ln -s /usr/local/ParametricAnalysisTool-3.2/pat_3.2/opt/pat/pat /usr/local/sbin/pat \
+&& ln -s /usr/local/bin/openstudioapplication-1.2.0 /usr/local/sbin/OpenStudioApp \
+&& ln -s /usr/local/ParametricAnalysisTool-3.2.0/pat_3.2.0/opt/pat/pat /usr/local/sbin/pat \
 && apt-get clean && $clean
 
 # Install Helm,  eksctl and kubectl
