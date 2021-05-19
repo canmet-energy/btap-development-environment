@@ -91,6 +91,8 @@ RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 |
 && chmod +x ./kubectl \
 && sudo mv ./kubectl /usr/local/bin/kubectl
 
+ENV PATH="/usr/local/openstudioapplication-1.2.0-alpha/lib:${PATH}"
+
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
 ADD --chown=osdev:osdev config/terminator/config /home/osdev/.config/terminator/config
