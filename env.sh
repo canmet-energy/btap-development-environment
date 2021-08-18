@@ -1,5 +1,5 @@
 #!/bin/bash
-os_version=3.0.1
+os_version=3.2.0
 image=canmet/btap-development-environment:$os_version
 canmet_server_folder=//s-bcc-nas2/Groups/Common\ Projects/HB/dockerhub_images/
 x_folder=nothing
@@ -18,21 +18,21 @@ echo ${machine}
 if [ $machine == "MinGw" ]
 then
     x_display='host.docker.internal:0.0'
-	if [ -d "/c/Program Files/Xming/" ]
+	if [ -d "/c/Program Files/VcXsrv/" ]
 	then
-		x_folder='/c/Program Files/Xming/'
-	elif [ -d "/c/Program Files (x86)/Xming/" ]
+		x_folder='/c/Program Files/VcXsrv/'
+	elif [ -d "/c/Program Files (x86)/VcXsrv/" ]
 	then
-		x_folder="/c/Program Files (x86)/Xming/"
+		x_folder="/c/Program Files (x86)/VcXsrv/"
 	else
-		echo "Could not find Xming installed on your system either /c/Program Files/Xming or /c/Program Files (x86)/Xming  . Please install Xming, ideally the donation version in the default location." 
+		echo "Could not find VcXsrv installed on your system either /c/Program Files/VcXsrv or /c/Program Files (x86)/VcXsrv  . Please install VcXsrv, ideally the donation version in the default location." 
 		exit
 	fi
 	
 	#Check if X server is running. 
-	if [ "`ps | grep Xming`" == "" ]
+	if [ "`ps | grep VcXsrv`" == "" ]
 	then
-		"${x_folder}"Xming.exe -ac -multiwindow -clipboard  -dpi 108 &
+		"${x_folder}"VcXsrv.exe -ac -multiwindow -clipboard  -dpi 108 &
 	fi
 
 elif [ $machine == "Linux" ]
