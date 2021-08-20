@@ -21,8 +21,6 @@ ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev
 ARG vscode_deps='curl libc6-dev  libasound2 libgconf-2-4 libgnome-keyring-dev libgtk2.0-0 libnss3 libpci3  libxtst6 libcanberra-gtk-module libnotify4 libxss1 wget'
 #Java repositories needed for Netbeans
 
-
-
 #D3 parallel coordinates deps due to canvas deps
 ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++'
 
@@ -48,6 +46,11 @@ RUN apt-get update \
 && add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
 && apt-get update && $apt_install $software $d3_deps $r_deps  \ 
 && apt-get clean && $clean
+
+# Update Git
+RUN add-apt-repository -y ppa:git-core/ppa \
+&& apt-get update \
+&& apt-get install git -y
 
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
