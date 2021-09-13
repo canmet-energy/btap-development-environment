@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.2.0
+ARG DOCKER_OPENSTUDIO_VERSION=3.2.1
 
 
-FROM canmet/docker-openstudio:3.2.0
+FROM canmet/docker-openstudio:3.2.1
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -55,13 +55,13 @@ RUN add-apt-repository -y ppa:git-core/ppa \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2021.2'
+ARG ruby_mine_version='RubyMine-2021.2.1'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2021.2'
-ARG pycharm_version='pycharm-professional-2021.2'
+ARG pycharm_loc='pycharm-2021.2.1'
+ARG pycharm_version='pycharm-professional-2021.2.1'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
@@ -71,8 +71,8 @@ RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymin
 
 # Install OpenStudio App & PAT and create symbolic links.
 ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.2.0/OpenStudioApplication-1.2.0+72d719fabe-Ubuntu18.04.deb \
-&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.2.0/ParametricAnalysisTool-3.2.0-Linux.deb \
+RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.2.1/OpenStudioApplication-1.2.1+29888f9a87-Ubuntu18.04.deb \
+&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.2.1/ParametricAnalysisTool-3.2.1-Linux.deb \
 && apt-get update \
 && $apt_install $os_app_deps \
 && pip install conan \
@@ -81,7 +81,7 @@ RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication
 && apt-get clean && $clean \
 && rm ./osa.deb ./pat.deb \
 && ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp \
-&& ln -s /usr/local/ParametricAnalysisTool-3.2.0/pat_3.2.0/opt/pat/pat /usr/local/sbin/pat \
+&& ln -s /usr/local/ParametricAnalysisTool-3.2.1/pat_3.2.1/opt/pat/pat /usr/local/sbin/pat \
 && apt-get clean && $clean
 
 # Install Helm,  eksctl and kubectl
