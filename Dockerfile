@@ -55,13 +55,13 @@ RUN add-apt-repository -y ppa:git-core/ppa \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2021.2.1'
+ARG ruby_mine_version='RubyMine-2021.2.2'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2021.2.1'
-ARG pycharm_version='pycharm-professional-2021.2.1'
+ARG pycharm_loc='pycharm-2021.2.2'
+ARG pycharm_version='pycharm-professional-2021.2.2'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
