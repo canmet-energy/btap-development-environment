@@ -14,18 +14,8 @@ ARG repository_utilities='ca-certificates software-properties-common dpkg-dev de
 #Basic software
 ARG software='git vim curl zip nano unzip xterm terminator diffuse openssh-client openssh-server sqlitebrowser dbus-x11'
 
-#Netbeans Dependancies (requires $java_repositories to be set)
-ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev oracle-java8-set-default'
-
-#VCCode Dependancies
-ARG vscode_deps='curl libc6-dev  libasound2 libgconf-2-4 libgnome-keyring-dev libgtk2.0-0 libnss3 libpci3  libxtst6 libcanberra-gtk-module libnotify4 libxss1 wget'
-#Java repositories needed for Netbeans
-
 #D3 parallel coordinates deps due to canvas deps
 ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++'
-
-#Purge software 
-ARG intial_purge_software='openjdk*'
 
 #set Java ENV
 #ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
