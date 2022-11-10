@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.2.1
+ARG DOCKER_OPENSTUDIO_VERSION=3.3.0-alpha
 
 
-FROM canmet/docker-openstudio:3.2.1
+FROM canmet/docker-openstudio:3.3.0-alpha
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -55,7 +55,7 @@ RUN add-apt-repository -y ppa:git-core/ppa \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2021.2.2'
+ARG ruby_mine_version='RubyMine-2021.2.3'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
