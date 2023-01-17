@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.2.1
+ARG DOCKER_OPENSTUDIO_VERSION=3.5.1
 
 
-FROM canmet/docker-openstudio:3.2.1
+FROM canmet/docker-openstudio:3.5.1
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -12,7 +12,7 @@ ENV DISPLAY ${DISPLAY}
 ARG repository_utilities='ca-certificates software-properties-common dpkg-dev debconf-utils'
 
 #Basic software
-ARG software='git vim curl zip nano unzip xterm terminator diffuse openssh-client openssh-server sqlitebrowser dbus-x11'
+ARG software='git vim curl zip nano unzip xterm terminator openssh-client openssh-server sqlitebrowser dbus-x11'
 
 #Netbeans Dependancies (requires $java_repositories to be set)
 ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev oracle-java8-set-default'
@@ -32,7 +32,7 @@ ARG intial_purge_software='openjdk*'
 ENV PATH $JAVA_HOME/bin:$PATH
 
 #Ubuntu install commands
-ARG apt_install='apt-get install -y --no-install-recommends --force-yes'
+ARG apt_install='apt-get install -y --no-install-recommends'
 
 #Ubuntu install clean up command
 ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
@@ -55,13 +55,13 @@ RUN add-apt-repository -y ppa:git-core/ppa \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2021.2.2'
+ARG ruby_mine_version='RubyMine-2022.3.1'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2021.2.2'
-ARG pycharm_version='pycharm-professional-2021.2.2'
+ARG pycharm_loc='pycharm-2021.3.1'
+ARG pycharm_version='pycharm-professional-2021.3.1'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
@@ -69,28 +69,20 @@ USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm 
 
-# Install OpenStudio App & PAT and create symbolic links.
-ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.2.1/OpenStudioApplication-1.2.1+29888f9a87-Ubuntu18.04.deb \
-&& wget -O pat.deb https://github.com/NREL/OpenStudio-PAT/releases/download/v3.2.1/ParametricAnalysisTool-3.2.1-Linux.deb \
+# Install OpenStudio App and create symbolic links.
+# old ependencies:  ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
+# New dependencies (3.5.1):
+ARG os_app_deps='freeglut3-dev libxkbfile-dev '
+RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.5.0/OpenStudioApplication-1.5.0+2a9ad1764a-Ubuntu20.04.deb \
 && apt-get update \
 && $apt_install $os_app_deps \
-&& pip install conan \
+&& python3 -m pip install conan \
+&& python3 -m pip install setuptools \
 && $apt_install ./osa.deb  \
-&& $apt_install ./pat.deb  \
 && apt-get clean && $clean \
-&& rm ./osa.deb ./pat.deb \
+&& rm ./osa.deb \
 && ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp \
-&& ln -s /usr/local/ParametricAnalysisTool-3.2.1/pat_3.2.1/opt/pat/pat /usr/local/sbin/pat \
 && apt-get clean && $clean
-
-# Install Helm,  eksctl and kubectl
-RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash \
-&& curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
-&& mv /tmp/eksctl /usr/local/bin \
-&& curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl \
-&& chmod +x ./kubectl \
-&& sudo mv ./kubectl /usr/local/bin/kubectl
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
