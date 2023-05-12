@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.5.1
+ARG DOCKER_OPENSTUDIO_VERSION=3.6.0
 
 
-FROM canmet/docker-openstudio:3.5.1
+FROM canmet/docker-openstudio:3.6.0
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
 
@@ -71,18 +71,13 @@ RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymin
 
 # Install OpenStudio App and create symbolic links.
 # old ependencies:  ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-# New dependencies (3.5.1):
+# New dependencies (3.6.0):
 ARG os_app_deps='freeglut3-dev libxkbfile-dev '
-RUN wget -O osa.deb https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.5.0/OpenStudioApplication-1.5.0+2a9ad1764a-Ubuntu20.04.deb \
-&& apt-get update \
+RUN apt-get update \
 && $apt_install $os_app_deps \
 && python3 -m pip install conan \
 && python3 -m pip install setuptools \
-&& $apt_install ./osa.deb  \
 && apt-get clean && $clean \
-&& rm ./osa.deb \
-&& ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp \
-&& apt-get clean && $clean
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
