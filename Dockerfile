@@ -14,25 +14,15 @@ ARG repository_utilities='ca-certificates software-properties-common dpkg-dev de
 #Basic software
 ARG software='git vim curl zip nano unzip xterm terminator openssh-client openssh-server sqlitebrowser dbus-x11'
 
-#Netbeans Dependancies (requires $java_repositories to be set)
-ARG netbeans_deps='oracle-java8-installer libxext-dev libxrender-dev libxtst-dev oracle-java8-set-default'
-
-#VCCode Dependancies
-ARG vscode_deps='curl libc6-dev  libasound2 libgconf-2-4 libgnome-keyring-dev libgtk2.0-0 libnss3 libpci3  libxtst6 libcanberra-gtk-module libnotify4 libxss1 wget'
-#Java repositories needed for Netbeans
-
 #D3 parallel coordinates deps due to canvas deps
 ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++'
-
-#Purge software 
-ARG intial_purge_software='openjdk*'
 
 #set Java ENV
 #ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV PATH $JAVA_HOME/bin:$PATH
 
 #Ubuntu install commands
-ARG apt_install='apt-get install -y --no-install-recommends'
+ARG apt_install='apt-get install -y'
 
 #Ubuntu install clean up command
 ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
@@ -42,9 +32,10 @@ RUN mkdir /downloads
 
 # Install software packages
 RUN apt-get update \ 
+&& apt-get upgrade \
 && $apt_install $repository_utilities \
 && add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
-&& apt-get update && $apt_install $software $d3_deps $r_deps  \ 
+&& apt-get update && $apt_install $software $d3_deps  \ 
 && apt-get clean && $clean
 
 # Update Git
@@ -69,15 +60,15 @@ USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm 
 
-# Install OpenStudio App and create symbolic links.
+# Install OpenStudio App and create symbolic links (will update when OS_app for OS 3.6.0 is available.
 # old ependencies:  ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-# New dependencies (3.6.0):
+# New dependencies (3.5.1):
 ARG os_app_deps='freeglut3-dev libxkbfile-dev '
 RUN apt-get update \
 && $apt_install $os_app_deps \
 && python3 -m pip install conan \
 && python3 -m pip install setuptools \
-&& apt-get clean && $clean \
+&& apt-get clean && $clean
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
