@@ -1,9 +1,9 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.6.0
+ARG DOCKER_OPENSTUDIO_VERSION=3.6.1
 
 
-FROM canmet/docker-openstudio:3.6.0
+FROM canmet/docker-openstudio:3.6.1
 
-MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca
+MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca and Chris Kirney chris.kirney@nrcan-rncan.gc.ca
 
 ARG DISPLAY=host.docker.internal
 ENV DISPLAY ${DISPLAY}
@@ -60,15 +60,22 @@ USER  root
 RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymine \
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm 
 
-# Install OpenStudio App and create symbolic links (will update when OS_app for OS 3.6.0 is available.
-# old ependencies:  ARG os_app_deps='build-essential git cmake-curses-gui cmake-gui libssl-dev libxt-dev libncurses5-dev libgl1-mesa-dev autoconf libexpat1-dev libpng-dev libfreetype6-dev libdbus-glib-1-dev libglib2.0-dev libfontconfig1-dev libxi-dev libxrender-dev libgeographic-dev libicu-dev chrpath bison libffi-dev libgdbm-dev libqdbm-dev libreadline-dev libyaml-dev libharfbuzz-dev libgmp-dev patchelf python-pip libgconf-2-4 libxss1 python-setuptools ' 
-# New dependencies (3.5.1):
-ARG os_app_deps='freeglut3-dev libxkbfile-dev '
-RUN apt-get update \
-&& $apt_install $os_app_deps \
-&& python3 -m pip install conan \
-&& python3 -m pip install setuptools \
-&& apt-get clean && $clean
+# Install OpenStudioApp and create symbolic links
+# Dependencies (OS 3.6.1, OS App 1.6.0):
+ARG os_app_deps='freeglut3-dev libxkbfile-dev libc6-dev '
+RUN wget https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.6.0/OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN apt-get update -y
+RUN $apt_install $os_app_deps
+RUN python3 -m pip install conan
+RUN python3 -m pip install setuptools
+RUN $apt_install ./OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN apt-get clean && $clean
+RUN rm ./OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp
+RUN apt-get clean && $clean
+
+RUN apt-get update -y
+RUN apt-get upgrade -y
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
