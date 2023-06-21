@@ -5,6 +5,7 @@ $linux_home_folder = '/home/osdev'
 Write-Host "Windows User:"  $win_user
 Write-Host "image name:" $image
 Write-Host "linux home folder:"  $linux_home_folder
+
 	
 
 	
