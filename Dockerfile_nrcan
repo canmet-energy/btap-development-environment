@@ -30,6 +30,12 @@ ARG clean='rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /downloads/*'
 #Create folder for downloads
 RUN mkdir /downloads
 
+# Put NRCan cert into rubygems directory (Remove if not on NRCan network)
+COPY cacert.pem /usr/local/lib/ruby/2.7.0/rubygems/ssl_certs/index.rubygems.org/
+COPY nrcan_azure_amazon.crt /usr/local/share/ca-certificates
+RUN cp /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates_orig.crt
+RUN sudo update-ca-certificates
+
 # Install software packages
 RUN apt-get update \ 
 && apt-get upgrade \
@@ -76,6 +82,12 @@ RUN apt-get clean && $clean
 
 RUN apt-get update -y
 RUN apt-get upgrade -y
+
+#Delete certificate from directory
+RUN rm /usr/local/lib/ruby/2.7.0/rubygems/ssl_certs/index.rubygems.org/cacert.pem
+RUN cp /etc/ssl/certs/ca-certificates_orig.crt /etc/ssl/certs/ca-certificates.crt
+RUN rm /etc/ssl/certs/ca-certificates_orig.crt
+RUN rm /usr/local/share/ca-certificates/nrcan_azure_amazon.crt
 
 USER  osdev
 ADD --chown=osdev:osdev btap_utilities /home/osdev/btap_utilities
