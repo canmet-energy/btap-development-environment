@@ -1,7 +1,7 @@
-ARG DOCKER_OPENSTUDIO_VERSION=3.7.0-rc2
+ARG DOCKER_OPENSTUDIO_VERSION=3.7.0
 
 
-FROM canmet/docker-openstudio:3.7.0-rc2
+FROM canmet/docker-openstudio:3.7.0
 
 MAINTAINER Phylroy Lopez phylroy.lopez@canada.ca and Chris Kirney chris.kirney@nrcan-rncan.gc.ca
 
