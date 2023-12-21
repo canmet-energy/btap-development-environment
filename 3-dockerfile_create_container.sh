@@ -5,8 +5,8 @@ if [ $machine == "MinGw" ]
 then
 	echo Windows users $win_user was detected.
 	echo using  X server at this IP $x_display .
-	echo docker create -ti -e DISPLAY=$x_display -P -v//c/Users/$win_user:$linux_home_folder/windows-host --name $container $image
-	docker create -ti -e DISPLAY=$x_display -P -v//c/Users/$win_user:$linux_home_folder/windows-host --name $container $image
+	echo podman create -ti -e DISPLAY=$x_display -P -v//c/Users/$win_user:$linux_home_folder/windows-host --name $container $image
+	podman create -ti -e DISPLAY=$x_display -P -v//c/Users/$win_user:$linux_home_folder/windows-host --name $container $image
 elif [ $machine == "Linux" ]
 then 
 	echo Linux home folder $HOME was detected.

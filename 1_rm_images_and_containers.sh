@@ -1,2 +1,2 @@
 #!/bin/bash
-docker rm $(docker ps -a -q) && docker rmi $(docker images -q)
+podman rm $(podman ps -a -q) && podman rmi $(podman images -q)

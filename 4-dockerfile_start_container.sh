@@ -8,4 +8,4 @@ elif [ $machine == "Linux" ]
 then
 	echo using  linux/macos X server at this IP $x_display
 fi
-docker start  -i  $1
+podman start  -ia  $1

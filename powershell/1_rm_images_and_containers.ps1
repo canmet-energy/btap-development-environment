@@ -1,3 +1,3 @@
-docker stop @(docker ps -a -q)
-$command = 'docker system prune'
+podman stop @(podman ps -a -q)
+$command = 'podman system prune'
 iex $command
