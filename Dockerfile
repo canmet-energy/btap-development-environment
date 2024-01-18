@@ -32,27 +32,23 @@ RUN mkdir /downloads
 
 # Install software packages
 RUN apt-get update \ 
-&& apt-get upgrade \
+&& apt-get upgrade -y \
 && $apt_install $repository_utilities \
+&& add-apt-repository -y ppa:git-core/ppa \
 && add-apt-repository -y ppa:linuxgndu/sqlitebrowser \
 && apt-get update && $apt_install $software $d3_deps  \ 
 && apt-get clean && $clean
 
-# Update Git
-RUN add-apt-repository -y ppa:git-core/ppa \
-&& apt-get update \
-&& apt-get install git -y
-
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2023.3'
+ARG ruby_mine_version='RubyMine-2023.3.2'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2023.3'
-ARG pycharm_version='pycharm-professional-2023.3'
+ARG pycharm_loc='pycharm-2023.3.2'
+ARG pycharm_version='pycharm-professional-2023.3.2'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
@@ -61,16 +57,16 @@ RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymin
 && ln -s /home/osdev/$pycharm_loc/bin/pycharm.sh /usr/local/sbin/pycharm 
 
 # Install OpenStudioApp and create symbolic links
-# Dependencies (OS 3.6.1, OS App 1.6.0):
+# Dependencies (OS 3.7.0, OS App 1.7.0):
 ARG os_app_deps='freeglut3-dev libxkbfile-dev libc6-dev '
-RUN wget https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.6.0/OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN wget https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.7.0-rc1/OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
 RUN apt-get update -y
 RUN $apt_install $os_app_deps
 RUN python3 -m pip install conan
 RUN python3 -m pip install setuptools
-RUN $apt_install ./OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN $apt_install ./OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
 RUN apt-get clean && $clean
-RUN rm ./OpenStudioApplication-1.6.0+53c249a897-Ubuntu20.04.deb
+RUN rm ./OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
 RUN ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp
 RUN apt-get clean && $clean
 
