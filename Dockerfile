@@ -14,8 +14,8 @@ ARG repository_utilities='ca-certificates software-properties-common dpkg-dev de
 #Basic software
 ARG software='git vim curl zip nano unzip xterm terminator openssh-client openssh-server sqlitebrowser dbus-x11'
 
-#D3 parallel coordinates deps due to canvas deps
-ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++'
+#D3 parallel coordinates deps due to canvas deps and OpenStudioApp dependencies
+ARG d3_deps='libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++ libxcb-cursor0'
 
 #set Java ENV
 #ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
