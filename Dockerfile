@@ -59,14 +59,14 @@ RUN ln -s /home/osdev/$ruby_mine_version/bin/rubymine.sh /usr/local/sbin/rubymin
 # Install OpenStudioApp and create symbolic links
 # Dependencies (OS 3.7.0, OS App 1.7.0):
 ARG os_app_deps='freeglut3-dev libxkbfile-dev libc6-dev '
-RUN wget https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.7.0-rc1/OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
+RUN wget https://github.com/openstudiocoalition/OpenStudioApplication/releases/download/v1.7.0-rc2/OpenStudioApplication-1.7.0-rc2+20d8af9727-Ubuntu20.04.deb
 RUN apt-get update -y
 RUN $apt_install $os_app_deps
 RUN python3 -m pip install conan
 RUN python3 -m pip install setuptools
-RUN $apt_install ./OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
+RUN $apt_install ./OpenStudioApplication-1.7.0-rc2+20d8af9727-Ubuntu20.04.deb
 RUN apt-get clean && $clean
-RUN rm ./OpenStudioApplication-1.7.0-rc1+3d3d913119-Ubuntu20.04.deb
+RUN rm ./OpenStudioApplication-1.7.0-rc2+20d8af9727-Ubuntu20.04.deb
 RUN ln -s /usr/local/bin/OpenStudioApp /usr/local/sbin/OpenStudioApp
 RUN apt-get clean && $clean
 
