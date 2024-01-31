@@ -42,13 +42,13 @@ RUN apt-get update \
 # Install JetBrains and regular user and create symbolic links. 
 USER  osdev
 WORKDIR /home/osdev
-ARG ruby_mine_version='RubyMine-2023.3.2'
+ARG ruby_mine_version='RubyMine-2023.3.3'
 RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2023.3.2'
-ARG pycharm_version='pycharm-professional-2023.3.2'
+ARG pycharm_loc='pycharm-2023.3.3'
+ARG pycharm_version='pycharm-professional-2023.3.3'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
