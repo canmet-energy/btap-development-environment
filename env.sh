@@ -1,5 +1,5 @@
 #!/bin/bash
-os_version=3.6.1
+os_version=3.7.0
 image=canmet/btap-development-environment:$os_version
 canmet_server_folder=//s-bcc-nas2/Groups/Common\ Projects/HB/dockerhub_images/
 x_folder=nothing
