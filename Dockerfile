@@ -47,8 +47,8 @@ RUN wget https://download.jetbrains.com/ruby/$ruby_mine_version.tar.gz \
 && tar -xzf $ruby_mine_version.tar.gz \
 && rm $ruby_mine_version.tar.gz
 # Install PyCharm
-ARG pycharm_loc='pycharm-2023.3.3'
-ARG pycharm_version='pycharm-professional-2023.3.3'
+ARG pycharm_loc='pycharm-2023.3.4'
+ARG pycharm_version='pycharm-professional-2023.3.4'
 RUN wget https://download.jetbrains.com/python/$pycharm_version.tar.gz \
 && tar -xzf $pycharm_version.tar.gz \
 && rm $pycharm_version.tar.gz
